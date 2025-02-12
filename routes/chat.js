@@ -4,13 +4,13 @@ const OpenAI = require("openai");
 const User = require("../models/User");
 
 const router = express.Router();
-OPENAI_API_KEY = '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'
+
 
 require("dotenv").config();
 
 // Initialize OpenAI
 const openai = new OpenAI({
-  APIKEY: OPENAI_API_KEY, // Make sure .env contains this
+  APIKEY: process.env.OPENAI_API_KEY, // Make sure .env contains this
 });
 
 // Middleware to Authenticate User
