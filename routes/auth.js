@@ -21,20 +21,19 @@ router.post("/register", async (req, res) => {
     const user = new User({ name, email, password: hashedPassword, gender, chatPreference });
 
     // Save user to database
-    await user.save();
+    await user.save(); // Ensure user is saved first
 
     // Generate JWT token
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: "1d" });
+    const token = jwt.sign({ userId: user._id.toString() }, process.env.JWT_SECRET, { expiresIn: "1d" });
 
     // Send response
     res.status(201).json({ msg: "User registered successfully", token, user });
 
   } catch (error) {
-    console.error(error);
+    console.error("Registration error:", error);
     res.status(500).json({ msg: "Server error" });
   }
 });
-
 
 
 
