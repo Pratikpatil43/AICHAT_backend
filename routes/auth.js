@@ -9,23 +9,34 @@ const router = express.Router();
 router.post("/register", async (req, res) => {
   try {
     const { name, email, password, gender, chatPreference } = req.body;
-    
+
+    // Check if user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) return res.status(400).json({ msg: "User already exists" });
 
+    // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = new User({ name, email, password: hashedPassword, gender, chatPreference });
-     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: "1d" });
 
-    res.json({ token, user });
-    
+    // Create user
+    const user = new User({ name, email, password: hashedPassword, gender, chatPreference });
+
+    // Save user to database
     await user.save();
-    res.status(201).json({ msg: "User registered successfully" });
+
+    // Generate JWT token
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: "1d" });
+
+    // Send response
+    res.status(201).json({ msg: "User registered successfully", token, user });
 
   } catch (error) {
+    console.error(error);
     res.status(500).json({ msg: "Server error" });
   }
 });
+
+
+
 
 // Login User
 // router.post("/login", async (req, res) => {
