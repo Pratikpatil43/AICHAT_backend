@@ -15,6 +15,11 @@ app.use(cors());
 app.use("/api/auth", authRoutes);
 app.use("/api/chat", chatRoutes);
 
+app.get("/",(req,res) =>{
+  res.send("hello")
+
+)}
+
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => console.log("🔥 MongoDB Connected"))
